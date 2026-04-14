@@ -41,9 +41,33 @@
 
 ### Current Landscape
 
-Astro's Seller Portal (`astro-vendor-web`) is a web-based platform used by vendors to manage their relationship with Astro — covering profile/document management, invoicing, campaigns, and ads. The portal is actively being developed. There is no dedicated support channel within it.
+Astro's Seller Portal (`astro-vendor-web`) is a web-based platform used by vendors to manage their relationship with Astro. It has four main sections:
+
+| Portal Menu | What It Covers |
+|---|---|
+| **Profile** | Vendor profile, address, preferred shipping date, MOQ/MOV, tax/PKP status, contact/PIC |
+| **Insight Report** | Fulfillment insight, brand insight, product insight |
+| **Invoice** (Pengajuan & Tagihan) | Invoice submission and billing |
+| **Daftar PO** | Purchase order list |
+
+The portal is actively being developed. There is no dedicated support channel within it today.
 
 For reference, the **Hub Care Unit (HCU)** is an analogous model already in use at Astro for last-mile mitra issues: the CX team operates from a dedicated admin dashboard module. The SCU ticketing system should follow this same internal-tool pattern, and not require a third-party tool like Zendesk.
+
+### Issue Category Taxonomy
+
+Based on analysis of real seller inquiries surfaced through category manager Google Chat channels (Apr 2026), the following categories have been identified and validated. The taxonomy is aligned to portal menu structure so vendors can self-identify the issue area.
+
+| Category (Bahasa) | Maps to Portal Menu | Observed Volume | Example Issues |
+|---|---|---|---|
+| **Login & Akses** | Pre-portal | ~15% | OTP not received, portal invite email never arrived, account can't be accessed |
+| **Profil & Konfigurasi** | Profile | ~10% | Tax/PKP status not reflected in PO, wrong PIC/contact in PO, address not updating |
+| **Daftar PO** | Daftar PO | ~20% | PO not showing in portal, can't download PO, PO amount discrepancy |
+| **Invoice & Pembayaran** | Invoice (Pengajuan & Tagihan) | ~40% | Can't submit invoice, invoice rejected + can't resubmit, bank account validation error, tukar faktur process questions |
+| **Insight Report** | Insight Report | ~5% | Operational/fulfillment data showing "no data", brand data incorrect |
+| **Bug / Error Portal** | Any menu | ~10% | App crash (client-side exception), page loading error, network connectivity error |
+
+> **Note for product team:** Invoice & Pembayaran + Daftar PO together account for ~60% of current inquiry volume. This has direct implications for SCU agent onboarding and triage SOP design — agents should be deeply trained on the invoice submission and PO visibility flows from day one.
 
 ---
 
@@ -110,7 +134,7 @@ This is a **two-sided ticketing system** with a seller-facing submission interfa
 
 | Page / Feature | Requirement | User Story | Acceptance Criteria | Priority | Notes |
 |---|---|---|---|---|---|
-| **Seller Portal — Submit Ticket** | Seller can create a new ticket | As a seller, I want to submit a support ticket from the Seller Portal so that I can report an issue without contacting my category manager. GIVEN I am logged into the Seller Portal / WHEN I navigate to the support section and fill in the ticket form / THEN my ticket is submitted and I receive a unique ticket ID with a confirmation message. | Happy Path: Form accepts category (required dropdown), subject (required, max 200 chars), description (required, max 2000 chars), attachment (optional, max 5MB). Non-Happy Path: Submission fails if category or subject is empty — inline validation shown. Edge Case: Attachment type restricted to jpg, png, pdf. Error State: If submission fails (network/server error), show retry prompt; do not clear form. | P0 | Issue categories to be defined with SCU team — flagged in Open Questions |
+| **Seller Portal — Submit Ticket** | Seller can create a new ticket | As a seller, I want to submit a support ticket from the Seller Portal so that I can report an issue without contacting my category manager. GIVEN I am logged into the Seller Portal / WHEN I navigate to the support section and fill in the ticket form / THEN my ticket is submitted and I receive a unique ticket ID with a confirmation message. | Happy Path: Form accepts category (required dropdown with 6 options: Login & Akses, Profil & Konfigurasi, Daftar PO, Invoice & Pembayaran, Insight Report, Bug / Error Portal), subject (required, max 200 chars), description (required, max 2000 chars), attachment (optional, max 5MB). Non-Happy Path: Submission fails if category or subject is empty — inline validation shown. Edge Case: Attachment type restricted to jpg, png, pdf. Error State: If submission fails (network/server error), show retry prompt; do not clear form. | P0 | Categories finalized based on real inquiry analysis — see Context section |
 | **Seller Portal — Ticket Confirmation** | Seller receives a ticket ID immediately after submission | As a seller, I want to see a confirmation with my ticket ID after submitting so that I have a reference for follow-up. GIVEN I have successfully submitted a ticket / WHEN the form is submitted / THEN I see a confirmation screen showing the ticket ID, issue category, and estimated first response note. | Happy Path: Confirmation displays ticket ID (e.g. SCU-00001), category, submission timestamp. Edge Case: Confirmation is still shown if the seller refreshes — ticket is not duplicated. | P0 | |
 | **Seller Portal — My Tickets** | Seller can view their ticket history and statuses | As a seller, I want to see all my submitted tickets and their current statuses so that I know if my issues are being worked on. GIVEN I am on the My Tickets page / WHEN the page loads / THEN I see a list of my tickets with ticket ID, category, subject, status, and last updated date. | Happy Path: List shows all tickets sorted by most recently updated. Status labels: Open, In Progress, Resolved, Closed. Non-Happy Path: Empty state if no tickets submitted — show prompt to submit first ticket. Edge Case: Pagination or infinite scroll for sellers with many tickets (>20). | P0 | |
 | **Seller Portal — Ticket Detail** | Seller can view the full thread of a ticket including agent replies | As a seller, I want to see the full conversation thread on my ticket so that I can understand what the agent has responded. GIVEN I click on a ticket in My Tickets / WHEN the detail page loads / THEN I see the original submission, all agent replies (chronological), current status, and ticket metadata. | Happy Path: Thread view shows submissions and replies in chronological order, timestamps on all entries. Non-Happy Path: If ticket has no reply yet, show "Awaiting response" state. Edge Case: Seller cannot edit the original submission after it is submitted. | P0 | |
@@ -138,7 +162,7 @@ This is a **two-sided ticketing system** with a seller-facing submission interfa
 
 | Question | Answer | Date Answered | Owner |
 |---|---|---|---|
-| What are the issue category options? (e.g. Bug Report, Invoice Issue, Product/Catalog Issue, Onboarding, General Inquiry) — Taxonomy must be agreed before development starts. | TBD | — | Berta + SCU Lead + Category Managers |
+| ~~What are the issue category options?~~ Issue category taxonomy is finalized — see Context section. | ✅ Resolved 14 Apr 2026 | 14 Apr 2026 | Berta |
 | Does the Seller Portal currently have email notification infrastructure? Or do we need to build this from scratch? | TBD | — | Engineering (SAP team) |
 | Who owns the SCU admin module — SAP engineering or a separate backend? Does HCU have a pattern we can reuse? | TBD | — | Engineering |
 | Can a closed ticket be reopened by a seller if their issue recurs? What's the expected behavior? | TBD | — | Berta + SCU Lead |
